@@ -9,5 +9,6 @@ public enum CommandType {
     CLIENT_MESSAGE,
     END,
     UPDATE_USERS_LIST,
-    UPDATE_DATABASE
+    UPDATE_DATABASE,
+    INSERT_USER
 }

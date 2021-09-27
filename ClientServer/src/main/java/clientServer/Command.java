@@ -76,4 +76,10 @@ public class Command implements Serializable {
         return command;
     }
 
+    public static Command insertCommand(String username, String login, String password) {
+        Command command = new Command();
+        command.data = new InsertCommandData(username, login, password);
+        command.type = CommandType.INSERT_USER;
+        return command;
+    }
 }

@@ -10,15 +10,18 @@ public class DatabaseService {
     private static final String GET_USERNAME_REQUEST = "SELECT user FROM members WHERE login = ? AND password = ?";
     private static final String DB_URL = "jdbc:sqlite:membersOfChat.db";
     private static final String CHANGE_USERNAME_REQUEST = "UPDATE members SET user = ? WHERE user = ?";
+    private static final String ADD_NEW_USER_REQUEST = "INSERT INTO members(login, password, user) VALUES(?, ?, ?)";
     private Connection connection;
     private PreparedStatement getUsernameStatement;
     private PreparedStatement changeUsernameStatement;
+    private PreparedStatement addNewUserStatement;
 
     public DatabaseService() {
         try {
             connection = DriverManager.getConnection(DB_URL);
             getUsernameStatement = connection.prepareStatement(GET_USERNAME_REQUEST);
             changeUsernameStatement = connection.prepareStatement(CHANGE_USERNAME_REQUEST);
+            addNewUserStatement = connection.prepareStatement(ADD_NEW_USER_REQUEST);
         } catch (SQLException e) {
             logger.error("Failed to database connection");
         }
@@ -47,6 +50,20 @@ public class DatabaseService {
         } catch (SQLException e) {
             logger.error("Failed to database connection");
         }
+    }
+
+    public void addNewUser(String username, String login, String password) {
+        try {
+            System.out.println("start");
+            addNewUserStatement.setString(1, login);
+            addNewUserStatement.setString(2, password);
+            addNewUserStatement.setString(3, username);
+            addNewUserStatement.executeUpdate();
+            System.out.println("end");
+        } catch (SQLException e) {
+            logger.error("Failed to database connection");
+        }
+
     }
 
     public void closeConnection() {

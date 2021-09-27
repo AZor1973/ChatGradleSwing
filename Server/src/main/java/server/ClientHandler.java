@@ -2,10 +2,7 @@ package server;
 
 import clientServer.Command;
 import clientServer.CommandType;
-import clientServer.commands.AuthCommandData;
-import clientServer.commands.PrivateMessageCommandData;
-import clientServer.commands.PublicMessageCommandData;
-import clientServer.commands.UpdateDatabaseCommandData;
+import clientServer.commands.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +33,7 @@ public class ClientHandler {
             System.out.println(Thread.currentThread().getName());
             try {
                 authentication();
+                System.out.println("auEnd");
                 readMessages();
             } catch (IOException e) {
                 logger.error("Failed to process message from client");
@@ -50,6 +48,7 @@ public class ClientHandler {
     }
 
     private void authentication() throws IOException {
+        System.out.println("auStart");
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -83,6 +82,10 @@ public class ClientHandler {
                     timer.cancel();
                     return;
                 }
+            }else if (command.getType() == CommandType.INSERT_USER){
+                System.out.println("Insert");
+                InsertCommandData data = (InsertCommandData) command.getData();
+                server.getDatabaseService().addNewUser(data.getUsername(), data.getLogin(), data.getPassword());
             }
         }
     }
@@ -104,6 +107,7 @@ public class ClientHandler {
     }
 
     private void readMessages() throws IOException {
+        System.out.println("readStart");
         while (true) {
             Command command = readCommand();
             if (command == null) {

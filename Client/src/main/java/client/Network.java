@@ -97,7 +97,7 @@ public class Network {
         this.password = password;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 
@@ -133,12 +133,12 @@ public class Network {
                         usersList.removeAll(usersList);
                         usersList.addAll(data.getUsers());
                     }
-                    if (command.getType() == CommandType.CLIENT_MESSAGE){
+                    if (command.getType() == CommandType.CLIENT_MESSAGE) {
                         ClientMessageCommandData data = (ClientMessageCommandData) command.getData();
                         message = data.getSender() + ": " + data.getMessage();
                         System.out.println(message);
                     }
-                    if (command.getType() == CommandType.ERROR){
+                    if (command.getType() == CommandType.ERROR) {
                         ErrorCommandData data = (ErrorCommandData) command.getData();
                         System.out.println(data.getErrorMessage());
                         EventQueue.invokeLater(() -> new ErrorFrame(data.getErrorMessage()));
@@ -179,6 +179,11 @@ public class Network {
         sendCommand(Command.updateDatabaseCommand(newUsername, oldUsername));
     }
 
+    public void addNewUser(String username, String login, String password) throws IOException {
+        sendCommand(Command.insertCommand(username, login, password));
+        System.out.println("Network");
+    }
+
     private void sendCommand(Command command) throws IOException {
         try {
             socketOutput.writeObject(command);
@@ -199,4 +204,6 @@ public class Network {
             e.printStackTrace();
         }
     }
+
+
 }
