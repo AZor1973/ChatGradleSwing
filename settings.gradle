@@ -1,0 +1,5 @@
+rootProject.name = 'ChatGradleSwing'
+include 'Server'
+include 'Client'
+include 'ClientServer'
+
