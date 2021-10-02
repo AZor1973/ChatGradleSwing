@@ -3,6 +3,8 @@ package client;
 import clientServer.Command;
 import clientServer.CommandType;
 import clientServer.commands.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
@@ -17,7 +19,7 @@ public class Network {
 
     private static final int SERVER_PORT = 8189;
     private static final String SERVER_HOST = "localhost";
-
+    private static final Logger logger = LoggerFactory.getLogger(Network.class);
     private static Network INSTANCE;
 
     private final String host;
@@ -61,7 +63,7 @@ public class Network {
             connected = true;
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Failed to establish connection");
+            logger.error("Failed to establish connection");
         }
     }
 
@@ -142,9 +144,10 @@ public class Network {
                         ErrorCommandData data = (ErrorCommandData) command.getData();
                         System.out.println(data.getErrorMessage());
                         EventQueue.invokeLater(() -> new ErrorFrame(data.getErrorMessage()));
+                        logger.error(data.getErrorMessage());
                     }
                 } catch (IOException e) {
-                    System.err.println("Failed to read message from server");
+                    logger.error("Failed to read message from server");
                     close();
                     break;
                 }
@@ -157,7 +160,7 @@ public class Network {
         try {
             command = (Command) socketInput.readObject();
         } catch (ClassNotFoundException e) {
-            System.err.println("Failed to read ClientServer.Command class");
+            logger.error("Failed to read ClientServer.Command class");
             e.printStackTrace();
         }
         return command;
@@ -181,14 +184,13 @@ public class Network {
 
     public void addNewUser(String username, String login, String password) throws IOException {
         sendCommand(Command.insertCommand(username, login, password));
-        System.out.println("Network");
     }
 
     private void sendCommand(Command command) throws IOException {
         try {
             socketOutput.writeObject(command);
         } catch (IOException e) {
-            System.err.println("Failed to send message to server");
+            logger.error("Failed to send message to server");
             throw e;
         }
     }
@@ -199,8 +201,9 @@ public class Network {
             authOk = false;
             socket.close();
             executorService.shutdown();
-            System.out.println("Executor closed");
+            logger.info("Executor closed");
         } catch (IOException e) {
+            logger.error("IOException in close()");
             e.printStackTrace();
         }
     }

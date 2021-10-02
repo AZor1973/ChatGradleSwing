@@ -16,6 +16,8 @@ public class ChatFrame extends JFrame {
     private String recipient;
     private String selectedListElement;
     private final Network network = Network.getInstance();
+    private HistoryService historyService;
+    private static final int LAST_HISTORY_ROWS_NUMBER = 100;
 
     private ChatFrame() {
         setBounds(400, 100, 600, 400);
@@ -108,12 +110,20 @@ public class ChatFrame extends JFrame {
             }
         }, 0, TimeUnit.SECONDS.toMillis(1));
 
-        addWindowListener(new WindowAdapter() {
+       this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
+                historyService.keepText(chatArea.getText());
+                historyService.close();
                 network.close();
             }
         });
+
+        if (historyService == null) {
+            historyService = new HistoryService(network.getLogin());
+            historyService.keepHistory();
+            chatArea.setText(historyService.loadLastRows2(LAST_HISTORY_ROWS_NUMBER));
+        }
 
         setVisible(true);
     }

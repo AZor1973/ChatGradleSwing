@@ -74,9 +74,7 @@ public class AuthFrame extends JFrame {
 
         JButton regButton = new JButton("Register");
         regButton.setBounds(190, 145, 100, 30);
-        regButton.addActionListener(e -> {
-            EventQueue.invokeLater(RegisterFrame::new);
-        });
+        regButton.addActionListener(e -> EventQueue.invokeLater(RegisterFrame::new));
 
         add(loginField);
         add(passField);

@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.nio.charset.Charset;
 
 public class ErrorFrame extends JFrame {
     public ErrorFrame(String errorMessage) {
